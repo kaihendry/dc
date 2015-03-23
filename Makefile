@@ -11,5 +11,8 @@ all: clean
 
 clean:
 	sudo docker stop test || true
+	# delete container
 	sudo docker rm test || true
+	# delete image
+	sudo docker rmi test || true
 	rm -f dc
