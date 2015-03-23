@@ -1,4 +1,5 @@
 all: clean
+	go build -a -tags netgo -ldflags "-linkmode external -extldflags -static"
 	# name image "test"
 	sudo docker build -t test .
 	# name running container "test" after image "test"
@@ -11,3 +12,4 @@ all: clean
 clean:
 	sudo docker stop test || true
 	sudo docker rm test || true
+	rm -f dc
