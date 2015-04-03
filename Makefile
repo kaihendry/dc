@@ -1,7 +1,6 @@
 all: clean
-	# this is a workaround for a non-**netgo** CGO_ENABLED=0 enabled build env
-	# hopefully netgo will be enabled by default in future go >=1.5 distributions
-	go build -a -tags netgo -ldflags "-linkmode external -extldflags -static"
+	# golang 1.4 needed
+	go build -a -tags netgo -installsuffix netgo .
 	file ./dc | grep "statically linked"
 	# name image "test"
 	sudo docker build -t test .
