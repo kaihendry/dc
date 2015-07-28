@@ -10,7 +10,7 @@ Tested successfully on Archlinux
 * faster
 * lightweight
 
-## Size of contianer
+## Size of container
 
 	$ sudo du -sh foobar
 	17M     foobar
@@ -19,4 +19,4 @@ Tested successfully on Archlinux
 
 * <https://github.com/systemd/systemd/issues/750#issuecomment-125402766>
 
-journalctl is not working.
+`sudo journalctl -M foobar -f` is not working.
