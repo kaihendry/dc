@@ -9,3 +9,14 @@ Tested successfully on Archlinux
 * simpler
 * faster
 * lightweight
+
+## Size of contianer
+
+	$ sudo du -sh foobar
+	17M     foobar
+
+# Related issues
+
+* <https://github.com/systemd/systemd/issues/750#issuecomment-125402766>
+
+journalctl is not working.
