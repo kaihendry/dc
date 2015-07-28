@@ -4,6 +4,8 @@ Run a statically built golang binary in a systemd-nspawn container example
 
 Tested successfully on Archlinux
 
+<img src=https://d11xdyzr0div58.cloudfront.net/static/logos/archlinux-logo-dark-scalable.518881f04ca9.svg alt="Archlinux logo">
+
 # Pros over Docker
 
 * simpler
