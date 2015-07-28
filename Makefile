@@ -1,21 +1,14 @@
-all: clean
-	# golang 1.4 needed
+CONTAINER_DIR=foobar
+
+dc: clean
 	go build -a -tags netgo -installsuffix netgo .
 	file ./dc | grep "statically linked"
-	# name image "test"
-	sudo docker build -t test .
-	# name running container "test" after image "test"
-	sudo docker run --publish 3000:3000 -d --name test test
-	xdg-open http://localhost:3000
-	sudo docker ps
-	# check image is small <10M
-	sudo docker images
+
+container: dc
+	mkdir $(CONTAINER_DIR) || true
+	sudo pacstrap -idc $(CONTAINER_DIR) filesystem
+	cp dc $(CONTAINER_DIR)
+	sudo systemd-nspawn -D $(CONTAINER_DIR) /dc
 
 clean:
-	# stop running container
-	sudo docker stop test || true
-	# delete container
-	sudo docker rm test || true
-	# delete image
-	sudo docker rmi test || true
-	rm -f dc
+	sudo rm -rf dc $(CONTAINER_DIR)
