@@ -26,7 +26,7 @@ input { font-size: 1.8em; padding: 0.3em; box-sizing: border-box; display: block
 </style>
 </head>
 <body>
-{{template "content"}}
+{{template "content" .}}
 </body>
 </html>`
 
@@ -37,6 +37,7 @@ const icontent = `<form action="/compare" method="post">
 </form>`
 
 var indextemplate = template.Must(template.New("main").Parse(tmain))
+var comparetemplate = template.Must(template.New("main").Parse(tmain))
 
 func main() {
 
@@ -76,7 +77,6 @@ func pform(w http.ResponseWriter, r *http.Request) {
 	duration := time.Since(then)
 	h.Duration = duration.String()
 
-	comparetemplate := template.Must(template.New("main").Parse(tmain))
 	comparetemplate.New("content").Parse(ccontent)
 	comparetemplate.Execute(w, h)
 
