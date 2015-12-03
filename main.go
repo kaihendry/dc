@@ -15,6 +15,26 @@ type Hduration struct {
 	Duration string
 }
 
+var indextemplate = template.Must(template.New("").Parse(`<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+body { font-family: sans-serif; }
+form { display: flex; flex-direction: column; }
+input { font-size: 1.8em; padding: 0.3em; box-sizing: border-box; display: block; flex: 1;}
+</style>
+</head>
+<body>
+<form action="/compare" method="post">
+<input type="date" name="from" required>
+<input type="submit">
+</form>
+</body>
+</html>`))
+
+var comparetemplate = template.Must(template.New("").Parse("Hours since {{.From}} are {{.Duration}}"))
+
 func main() {
 
 	http.HandleFunc("/favicon.ico", http.NotFound)
@@ -53,48 +73,13 @@ func pform(w http.ResponseWriter, r *http.Request) {
 	duration := time.Since(then)
 	h.Duration = duration.String()
 
-	tmpl, err := template.New("test").Parse("Hours since {{.From}} are {{.Duration}}")
-
-	if err != nil {
-		panic(err)
-	}
-
-	err = tmpl.Execute(w, h)
-	if err != nil {
-		panic(err)
-	}
+	comparetemplate.Execute(w, h)
 
 	log.Printf("%s %s %s %s\n", r.RemoteAddr, r.Method, h.From, r.UserAgent())
 
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-
-	t, err := template.New("foo").Parse(`<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8" />
-<style>
-body { font-family: sans-serif; }
-form { display: flex; flex-direction: column; }
-input { font-size: 1.8em; padding: 0.3em; box-sizing: border-box; display: block; flex: 1;}
-</style>
-</head>
-<body>
-<form action="/compare" method="post">
-<input type="date" name="from" required>
-<input type="submit">
-</form>
-</body>
-</html>`)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	t.Execute(w, nil)
-
+	indextemplate.Execute(w, nil)
 	log.Printf("%s %s %s %s\n", r.RemoteAddr, r.Method, r.URL, r.UserAgent())
-
 }
