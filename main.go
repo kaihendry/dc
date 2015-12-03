@@ -15,7 +15,7 @@ type Hduration struct {
 	Duration string
 }
 
-var indextemplate = template.Must(template.New("").Parse(`<!DOCTYPE html>
+const tmain = `<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8" />
@@ -26,14 +26,17 @@ input { font-size: 1.8em; padding: 0.3em; box-sizing: border-box; display: block
 </style>
 </head>
 <body>
-<form action="/compare" method="post">
+{{template "content"}}
+</body>
+</html>`
+
+const ccontent = `Hours since {{.From}} are {{.Duration}}`
+const icontent = `<form action="/compare" method="post">
 <input type="date" name="from" required>
 <input type="submit">
-</form>
-</body>
-</html>`))
+</form>`
 
-var comparetemplate = template.Must(template.New("").Parse("Hours since {{.From}} are {{.Duration}}"))
+var indextemplate = template.Must(template.New("main").Parse(tmain))
 
 func main() {
 
@@ -73,6 +76,8 @@ func pform(w http.ResponseWriter, r *http.Request) {
 	duration := time.Since(then)
 	h.Duration = duration.String()
 
+	comparetemplate := template.Must(template.New("main").Parse(tmain))
+	comparetemplate.New("content").Parse(ccontent)
 	comparetemplate.Execute(w, h)
 
 	log.Printf("%s %s %s %s\n", r.RemoteAddr, r.Method, h.From, r.UserAgent())
@@ -80,6 +85,7 @@ func pform(w http.ResponseWriter, r *http.Request) {
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
+	indextemplate.New("content").Parse(icontent)
 	indextemplate.Execute(w, nil)
 	log.Printf("%s %s %s %s\n", r.RemoteAddr, r.Method, r.URL, r.UserAgent())
 }
